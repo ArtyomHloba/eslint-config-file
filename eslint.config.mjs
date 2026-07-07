@@ -3,7 +3,7 @@ import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import perfectionist from 'eslint-plugin-perfectionist';
 
 export default tseslint.config(
   {
@@ -27,20 +27,29 @@ export default tseslint.config(
   },
   {
     plugins: {
-      'simple-import-sort': simpleImportSort,
+      perfectionist,
     },
     rules: {
-      'simple-import-sort/imports': [
+      'perfectionist/sort-imports': [
         'error',
         {
+          type: 'alphabetical',
+          order: 'asc',
+          ignoreCase: true,
           groups: [
-            ['^node:', '^@nestjs/', '^[a-zA-Z]', '^@[a-zA-Z]'],
-            ['^@libs/'],
-            ['^\\.\\./', '^\\./'],
+            ['builtin', 'external'],
+            'libs',
+            ['parent', 'sibling', 'index'],
           ],
+          customGroups: [
+            {
+              groupName: 'libs',
+              elementNamePattern: '^@libs/.*',
+            },
+          ],
+          newlinesBetween: 1,
         },
       ],
-      'simple-import-sort/exports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-floating-promises': 'error',
